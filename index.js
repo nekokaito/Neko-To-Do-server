@@ -44,74 +44,46 @@ const dbConnect = async () => {
       res.send(user);
     });
 
-
+    
     // Adding User
     app.post("/add-user", async (req, res) => {
       const { email, displayName, photoURL, uid } = req.body;
 
-      
-      const existingUser = await userCollection.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({ message: "User already exists" });
-      }
+     
+      const user =   await userCollection.insertOne({
+        email,
+        displayName,
+        photoURL,
+        uid,
+      });
 
-      try {
-        
-        const result = await userCollection.insertOne({
-          email,
-          displayName,
-          photoURL,
-          uid,
-        });
-
-        res.status(201).json({ message: "User added successfully", result });
-      } catch (error) {
-        console.error("Error inserting user:", error);
-        res.status(500).json({ message: "Server error" });
-      }
+     
+      res.send(user);
     });
 
-   // TO-DO CARD
+    // TO-DO CARD
 
-   
-   //add-todo
+    //add-todo
 
-  app.post('/add-todo', async(req, res)=> {
+    app.post("/add-todo", async (req, res) => {
+      const query = req.body;
 
-     const query = req.body;
+      const todo = await todoCollection.insertOne(query);
 
-     const todo = await todoCollection.insertOne(query);
+      res.send(todo);
+    });
 
+    //user-todo
 
-     res.send(todo);
+    app.get("/todos", async (req, res) => {
+      const { email } = req.body;
 
+      const todos = await todoCollection.find({ email }).toArray();
 
-  })
-    
+      res.send(todos);
+    });
 
-
-
-
-
-   //user-todo
-
-   app.get('/todos', async (req, res) => {
-     
-      const {email} = req.body;
-    
-     const todos = await todoCollection.find({email}).toArray();
-
-     res.send(todos);
-
-
-   })
-
-
-
-
-   // Try Ends Here
-
-
+    // Try Ends Here
   } catch (error) {
     console.error(error);
     process.exit(1);
