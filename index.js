@@ -71,7 +71,40 @@ const dbConnect = async () => {
       }
     });
 
+   // TO-DO CARD
 
+   
+   //add-todo
+
+  app.post('/add-todo', async(req, res)=> {
+
+     const query = req.body;
+
+     const todo = await todoCollection.insertOne(query);
+
+
+     res.send(todo);
+
+
+  })
+    
+
+
+
+
+
+   //user-todo
+
+   app.get('/todos', async (req, res) => {
+     
+      const {email} = req.body;
+    
+     const todos = await todoCollection.find({email}).toArray();
+
+     res.send(todos);
+
+
+   })
 
 
 
