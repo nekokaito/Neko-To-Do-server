@@ -61,7 +61,7 @@ const dbConnect = async () => {
       res.send(user);
     });
 
-    // TO-DO CARD
+    //------------------------- TO-DO CARD --------------------//
 
     //add-todo
 
@@ -82,6 +82,37 @@ const dbConnect = async () => {
 
       res.send(todos);
     });
+   
+    // delete-todo
+
+   app.delete("/todos/:id", async (req, res) => {
+     const { id } = req.params; 
+     const { email } = req.body; 
+
+     if (!email) {
+       return res.status(400).json({ message: "Email is required" });
+     }
+
+     
+     const objectId = new ObjectId(id);
+
+    
+     const result = await todoCollection.deleteOne({
+       _id: objectId, 
+       email: email, 
+     });
+
+     if (result.deletedCount === 0) {
+       return res
+         .status(404)
+         .json({ message: "Todo not found or email mismatch" });
+     }
+
+     res.json({ message: "Todo deleted successfully" });
+   });
+
+
+
 
     // Try Ends Here
   } catch (error) {
