@@ -1,12 +1,14 @@
 {
-  "name": "bun-i",
+  "name": "neko-todo-server",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bun run index.js"
+    "start": "nodemon index.js"
   },
-  "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

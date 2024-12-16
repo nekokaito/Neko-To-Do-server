@@ -1,7 +1,9 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
+
+dotenv.config();
 
 const port = process.env.PORT || 4000;
 const app = express();
@@ -17,7 +19,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
 
 app.options("*", cors());
 app.use(express.json());
@@ -42,8 +43,6 @@ const dbConnect = async () => {
   try {
     await client.connect();
     console.log("DB Connected");
-
-   
 
     // Get User
     app.get("/user", async (req, res) => {
@@ -75,8 +74,6 @@ const dbConnect = async () => {
     //------------------------- TO-DO CARD --------------------//
 
     // Add Todo
- 
-
     app.post("/add-todo", async (req, res) => {
       try {
         const query = req.body;
@@ -87,7 +84,6 @@ const dbConnect = async () => {
         res.status(500).json({ error: error.message });
       }
     });
-    
 
     // User Todos
     app.get("/todos/:email", async (req, res) => {
@@ -105,8 +101,6 @@ const dbConnect = async () => {
     app.delete("/todos/:id", async (req, res) => {
       try {
         const { id } = req.params;
-      
-
         const objectId = new ObjectId(id);
 
         const result = await todoCollection.deleteOne({
@@ -114,9 +108,7 @@ const dbConnect = async () => {
         });
 
         if (result.deletedCount === 0) {
-          return res
-            .status(404)
-            .json({ message: "Todo not found or email mismatch" });
+          return res.status(404).json({ message: "Todo not found or email mismatch" });
         }
 
         res.json({ message: "Todo deleted successfully" });
@@ -125,25 +117,22 @@ const dbConnect = async () => {
       }
     });
 
-    //Update Todo
+    // Update Todo
     app.put("/todos/:id", async (req, res) => {
       try {
         const { id } = req.params;
-        const {title } = req.body;
-        
+        const { title } = req.body;
+
         const result = await todoCollection.updateOne(
-          { _id: new ObjectId(id)},
+          { _id: new ObjectId(id) },
           { $set: { title: title.trim() } }
         );
-        
-        
+
         res.send({ message: "Todo updated successfully" });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
     });
-
-   
   } catch (error) {
     console.error(error);
     process.exit(1);
