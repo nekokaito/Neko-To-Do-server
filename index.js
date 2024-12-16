@@ -75,17 +75,19 @@ const dbConnect = async () => {
     //------------------------- TO-DO CARD --------------------//
 
     // Add Todo
+ 
+
     app.post("/add-todo", async (req, res) => {
       try {
         const query = req.body;
-        
-        const todo = await todoCollection.insertOne(query);
-        
-        res.send(todo);
+        const result = await todoCollection.insertOne(query);
+        const insertedTodo = await todoCollection.findOne({ _id: result.insertedId });
+        res.status(201).send(insertedTodo);
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
     });
+    
 
     // User Todos
     app.get("/todos/:email", async (req, res) => {
