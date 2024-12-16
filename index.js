@@ -78,7 +78,9 @@ const dbConnect = async () => {
     app.post("/add-todo", async (req, res) => {
       try {
         const query = req.body;
+        
         const todo = await todoCollection.insertOne(query);
+        
         res.send(todo);
       } catch (error) {
         res.status(500).json({ error: error.message });
@@ -101,17 +103,12 @@ const dbConnect = async () => {
     app.delete("/todos/:id", async (req, res) => {
       try {
         const { id } = req.params;
-        const { email } = req.body;
-
-        if (!email) {
-          return res.status(400).json({ message: "Email is required" });
-        }
+      
 
         const objectId = new ObjectId(id);
 
         const result = await todoCollection.deleteOne({
-          _id: objectId,
-          email: email,
+          _id: objectId
         });
 
         if (result.deletedCount === 0) {
